@@ -2,47 +2,48 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>Reconocimiento de Letras Árabes</title>
+    <title>Predicción de Letras Árabes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             direction: rtl;
-            background: #f5f5f5;
+            background: #f0f0f0;
         }
         canvas {
             border: 2px solid #333;
             background: white;
             margin: 10px 0;
         }
-        button, select {
-            padding: 10px;
-            margin: 5px;
+        button {
+            padding: 10px 15px;
+            margin: 10px;
             font-size: 1rem;
+        }
+        .resultado {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <h1>✍️ Dibuja una letra árabe</h1>
     <canvas id="canvas" width="280" height="280"></canvas>
-    <br>
 
-    <form method="POST" action="/upload" onsubmit="return enviarImagen()">
-        <label for="numero">Letra:</label>
-        <select name="numero" id="numero" required>
-            <option value="ا">ا</option>
-            <option value="ب">ب</option>
-            <option value="ت">ت</option>
-        </select>
+    <form method="POST" onsubmit="return enviarImagen()">
         <input type="hidden" name="myImage" id="myImage">
         <br>
-        <button type="submit">📤 Subir imagen</button>
+        <button type="submit">📤 Predecir Letra</button>
         <button type="button" onclick="limpiar()">🧹 Limpiar</button>
     </form>
 
-    <br>
-    <a href="/prepare"><button>🛠️ Preparar Dataset</button></a>
-    <a href="/test"><button>🔍 Probar Modelo</button></a>
+    {% if pred %}
+    <div class="resultado">
+        <h2>🧠 Letra predicha: {{ pred }}</h2>
+        {% if img %}
+        <img src="/pred_img/{{ img }}" alt="Resultado de predicción">
+        {% endif %}
+    </div>
+    {% endif %}
 
     <script>
         const canvas = document.getElementById('canvas');
