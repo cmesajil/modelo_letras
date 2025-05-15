@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>Reconocimiento de Letras Árabes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            direction: rtl;
+            background: #f5f5f5;
+        }
+        canvas {
+            border: 2px solid #333;
+            background: white;
+            margin: 10px 0;
+        }
+        button, select {
+            padding: 10px;
+            margin: 5px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>✍️ Dibuja una letra árabe</h1>
+    <canvas id="canvas" width="280" height="280"></canvas>
+    <br>
+
+    <form method="POST" action="/upload" onsubmit="return enviarImagen()">
+        <label for="numero">Letra:</label>
+        <select name="numero" id="numero" required>
+            <option value="ا">ا</option>
+            <option value="ب">ب</option>
+            <option value="ت">ت</option>
+        </select>
+        <input type="hidden" name="myImage" id="myImage">
+        <br>
+        <button type="submit">📤 Subir imagen</button>
+        <button type="button" onclick="limpiar()">🧹 Limpiar</button>
+    </form>
+
+    <br>
+    <a href="/prepare"><button>🛠️ Preparar Dataset</button></a>
+    <a href="/test"><button>🔍 Probar Modelo</button></a>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let dibujando = false;
+
+        canvas.addEventListener('mousedown', () => dibujando = true);
+        canvas.addEventListener('mouseup', () => dibujando = false);
+        canvas.addEventListener('mouseout', () => dibujando = false);
+
+        canvas.addEventListener('mousemove', function (e) {
+            if (!dibujando) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.fillStyle = "black";
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        function limpiar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function enviarImagen() {
+            const imageInput = document.getElementById('myImage');
+            const dataURL = canvas.toDataURL('image/png');
+            imageInput.value = dataURL;
+            return true;
+        }
+    </script>
+</body>
+</html>
