@@ -1,0 +1,6 @@
+flask
+numpy
+matplotlib
+tensorflow
+scikit-image
+gunicorn
